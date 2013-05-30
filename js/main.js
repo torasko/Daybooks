@@ -1,27 +1,7 @@
-var directives = angular.module('myApp', ['ui']);
+var myApp = angular.module('myApp', ['ui']);
 
-directives.directive('datepicker', ['$parse', function($parse) {
-  var directiveDefinitionObject = {
-    restrict: 'A',
-    link: function postLink(scope, iElement, iAttrs) {
-      iElement.datepicker({
-        dateFormat: 'yy-mm-dd',
-        onSelect: function(dateText, inst) {
-          scope.$apply(function(scope){
-            $parse(iAttrs.ngModel).assign(scope, dateText);
-          });
-        }
-      });
-    }
-  };
-  return directiveDefinitionObject;
-}]);
+angular.module('myApp',[]).controller('DaybooksCtrl', function($scope) {
 
-
-
-function DaybooksCtrl($scope) {
-
-    $scope.years = [{"year":"2012"},{"year": "2013"}];
     $scope.daybooks = [
         {date:'2012-12-17', entry:'50134', type:'Journal entry', invoice:'', account:'1000', accountName: 'Fixed assets', contrAccount: '9010', contrAccountName: 'Freehold property', dc: 'Debit', text:'Derp Receiprt', amount: 12125, accountVAT:1698, contrAccountVAT:1819, currency:'USD'},
         {date:'2013-01-21', entry:'50135', type:'Journal entry', invoice:'', account:'1010', accountName: 'Freehold property', contrAccount: '9010', contrAccountName: 'Freehold property', dc: 'Debit', text:'Apple Receiprt', amount: 7350, accountVAT:882, contrAccountVAT:1103, currency:'UAH'},
@@ -56,7 +36,7 @@ function DaybooksCtrl($scope) {
 
     $scope.currencies = [ 'UAH', 'USD', 'RUR', 'GBP', 'EUR', 'EEK', 'EGP', 'CYP'];
     $scope.Daybook = {};
-    $scope.Daybook.currency = "USD";
+    $scope.EditDaybook = {};
 
     $scope.getTotal = function(){
         return $scope.daybooks.length;
@@ -85,9 +65,9 @@ function DaybooksCtrl($scope) {
         $(name).modal('show');
     };
 
-    $scope.openEditModal = function(daybook) {
+    $scope.openEditModal = function(daybook){
+        $scope.EditDaybook = daybook;
         $('#editDaybookModal').modal('show');
-        $scope.Daybook = daybook;
     };
 
     $scope.openAddModal = function(){
@@ -111,7 +91,7 @@ function DaybooksCtrl($scope) {
     $scope.countVAT = function(account, amount, key){
         if (key == 1)
           $array = $scope.contrAccounts;
-        else
+        if (key === 0)
           $array = $scope.accounts;
         for (i=0;i<$array.length;i++) {
             if ($array[i].no == account){
@@ -132,4 +112,4 @@ function DaybooksCtrl($scope) {
     };
 
 
-}
+});
